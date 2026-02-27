@@ -1,1 +1,6 @@
-[]
+[
+  {"name":"技术","description":"编程、架构、工具","createdAt":"2026-01-10T08:00:00Z"},
+  {"name":"读书","description":"书摘与感悟","createdAt":"2026-01-15T09:00:00Z"},
+  {"name":"产品","description":"产品思考与案例","createdAt":"2026-01-20T10:00:00Z"},
+  {"name":"健康","description":"运动与饮食记录","createdAt":"2026-02-01T07:00:00Z"}
+]
