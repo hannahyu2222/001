@@ -2,6 +2,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getTopics, getEntriesByTopic } from '@/lib/notes';
 import EntryCard from '@/components/EntryCard';
+import DeleteTopicButton from '@/components/DeleteTopicButton';
 
 export const dynamic = 'force-dynamic';
 
@@ -34,16 +35,19 @@ export default async function TopicPage({ params }: Props) {
             )}
             <p className="page-subtitle">共 {entries.length} 条笔记</p>
           </div>
-          <Link
-            href={`/add`}
-            className="btn btn-primary"
-          >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
-            新增
-          </Link>
+          <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+            <DeleteTopicButton topicName={topic.name} entryCount={entries.length} />
+            <Link
+              href={`/add`}
+              className="btn btn-primary"
+            >
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <line x1="12" y1="5" x2="12" y2="19" />
+                <line x1="5" y1="12" x2="19" y2="12" />
+              </svg>
+              新增
+            </Link>
+          </div>
         </div>
       </div>
 
