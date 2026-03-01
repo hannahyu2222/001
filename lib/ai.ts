@@ -153,4 +153,58 @@ ${notesStr}
   }
 }
 
+export interface Quote {
+  text: string;
+  caption: string;
+  tags: string[];
+}
+
+export async function extractQuotes(rawText: string): Promise<Quote[] | null> {
+  if (!hasApiKey()) return null;
+
+  try {
+    const Anthropic = (await import('@anthropic-ai/sdk')).default;
+    const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
+
+    const response = await client.messages.create({
+      model: 'claude-opus-4-6',
+      max_tokens: 2048,
+      messages: [
+        {
+          role: 'user',
+          content: `你是一个擅长提炼金句的文案高手。请从以下我的碎片感悟中，提炼出3-6条适合发小红书的金句。
+
+要求：
+- 金句要简洁有力，1-2句话，能引起共鸣
+- 配一段30字以内的小红书文案（可以带emoji，接地气）
+- 配2-4个相关话题标签（用#开头）
+- 保留原有的情感和洞察，但语言更精炼有张力
+
+我的原始感悟：
+${rawText.slice(0, 3000)}
+
+请返回JSON格式（不要其他文字）：
+[
+  {
+    "text": "金句正文",
+    "caption": "配套小红书文案（含emoji）",
+    "tags": ["#话题1", "#话题2", "#话题3"]
+  }
+]`,
+        },
+      ],
+    });
+
+    const text = response.content[0].type === 'text' ? response.content[0].text : '';
+    const jsonMatch = text.match(/\[[\s\S]*\]/);
+    if (jsonMatch) {
+      return JSON.parse(jsonMatch[0]);
+    }
+    return null;
+  } catch (e) {
+    console.error('AI extractQuotes error:', e);
+    return null;
+  }
+}
+
 export { hasApiKey };
